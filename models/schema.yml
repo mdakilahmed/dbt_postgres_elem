@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: raw_data
+    description: "This model fetches raw loan data from the source"
+    columns:
+      - name: Loan_ID
+        description: "Primary key for the loan data"
+        tests:
+          - unique
+          - not_null
+      - name: ApplicantIncome
+        description: "Income of the primary applicant"
+        tests:
+          - not_null
+      - name: CIBIL_Score
+        description: "Credit score of the applicant"
+        tests:
+          - not_null
+      - name: LoanAmount
+        description: "Amount of loan applied for"
+        tests:
+          - not_null
+      - name: Credit_History
+        description: "Credit history of the applicant"
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+  - name: income_calculations
+    description: "Calculates total income and loan eligibility"
+    columns:
+      - name: Loan_ID
+        description: "Primary key for each loan record"
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('raw_data')
+              field: Loan_ID
+      - name: Total_Income
+        description: "Sum of applicant and co-applicant income"
+        tests:
+          - not_null
+      - name: Loan_Eligibility
+        description: "Eligibility status for the loan"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Eligible', 'Not Eligible']
+      - name: Risk_Category
+        description: "Risk classification based on CIBIL score and credit history"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Low Risk', 'Medium Risk', 'High Risk']

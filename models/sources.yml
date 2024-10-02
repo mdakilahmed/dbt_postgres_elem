@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: loan_data
+    database: loan_db  # replace with your database name
+    schema: raw                    # replace with your raw schema name
+    tables:
+      - name: loanee_details
